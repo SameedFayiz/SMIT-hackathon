@@ -1,2 +1,2 @@
-# SMIT-hackathon
- 
+# Firebase Web
+ firebase integrated Website
