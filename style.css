@@ -1,9 +1,41 @@
-
-.body1 {
+/* Auth Page */
+.bodyBack {
   background-image: url("https://img.freepik.com/free-vector/purple-3d-modern-background-design_53876-87399.jpg?size=626&ext=jpg&ga=GA1.2.400972649.1671267927&semt=ais") !important;
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
+}
+
+.signPageBack {
+  justify-content: flex-start;
+  background-image: url("https://img.freepik.com/free-vector/gradient-wavy-purple-background_23-2149117433.jpg") !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#signContainer {
+  width: 75%;
+  min-height: 100vh;
+  overflow: hidden;
+  align-items: center !important;
+}
+
+#signIn,
+#signUp {
+  background-color: rgb(255, 255, 255);
+  margin: auto 0px !important;
+  height: 675px !important;
+  align-items: center;
+}
+
+.horRule::before,
+.horRule::after {
+  background-color: #000;
+  content: "";
+  display: inline-block;
+  height: 2px;
+  vertical-align: middle;
+  width: 30%;
 }
 
 .colourThemeText {
@@ -26,58 +58,6 @@ a.colourThemeText:hover,
 }
 
 
-#signIn,
-#signUp {
-  height: 100%;
-  width: 100%;
-  min-height: 100vh;
-  overflow: hidden;
-  align-items: center !important;
-  transform: translateX(0px);
-  transition: all 1.3s ease-in-out;
-}
-
-.moveOut {
-  transform: translateX(2000px) !important;
-}
-
-.moveIn {
-  transform: translateX(-2000px) !important;
-}
-
-
-.signInDiv,
-.signUpDiv,
-.signPageDiv {
-  display: flex;
-  background-color: rgb(255, 255, 255);
-  margin: auto 0px !important;
-  height: 650px !important;
-  width: 550px !important;
-  padding: 100px 75px !important;
-  justify-content: center;
-  align-items: center;
-}
-
-.horRule::before,
-.horRule::after {
-  background-color: #000;
-  content: "";
-  display: inline-block;
-  height: 2px;
-  vertical-align: middle;
-  width: 30%;
-}
-
-
-.signPageDiv {
-  justify-content: flex-start;
-  background-image: url("https://img.freepik.com/free-vector/gradient-wavy-purple-background_23-2149117433.jpg") !important;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {}
 
@@ -88,7 +68,46 @@ a.colourThemeText:hover,
 @media only screen and (min-width: 768px) {}
 
 /* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {}
+@media only screen and (min-width: 992px) {
+  body>* {
+    transform: scale(0.85);
+  }
+
+  /* Auth Page */
+  #signContainer {
+    width: 90%;
+    min-height: 100vh;
+    overflow: hidden;
+    align-items: center !important;
+  }
+}
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {}
+@media only screen and (min-width: 1200px) {
+  body>* {
+    transform: scale(0.9);
+  }
+
+  /* Auth Page */
+  #signContainer {
+    width: 75%;
+    min-height: 100vh;
+    overflow: hidden;
+    align-items: center !important;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1488px and up) */
+@media only screen and (min-width: 1488px) {
+  body>* {
+    transform: scale(0.9);
+  }
+
+  /* Auth Page */
+  #signContainer {
+    width: 60%;
+    min-height: 100vh;
+    overflow: hidden;
+    align-items: center !important;
+  }
+}
