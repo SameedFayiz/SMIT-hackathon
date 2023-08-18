@@ -57,6 +57,17 @@ a.colourThemeText:hover,
   background: linear-gradient(90deg, rgba(58, 8, 157, 1) 0%, rgba(223, 6, 235, 1) 100%);
 }
 
+.moveIn {
+  transition: all 1s linear;
+  transform: scale(1);
+  opacity: 1;
+}
+
+.moveOut {
+  transition: all 1s linear;
+  transform: scale(0);
+    opacity: 0;
+}
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {}

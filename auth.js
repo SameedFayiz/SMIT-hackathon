@@ -198,25 +198,17 @@ function signUpsignIn(elem) {
     let signIn = document.querySelector("#signIn")
     if (elem.id == "goToSignUp") {
         signInEmail.value = null, signInPassword.value = null
-        signIn.classList.add("moveOut")
+        signIn.classList.replace("moveIn", "moveOut")
         setTimeout(() => {
-            signIn.classList.replace("d-flex", "d-none")
-            signUp.classList.replace("d-none", "d-flex")
-            setTimeout(() => {
-                signUp.classList.remove("moveIn")
-            }, 50);
-        }, 1310)
+            signUp.classList.replace("moveOut", "moveIn")
+        }, 1000)
     } else {
         userFName.value = null, userLName.value = null, signUpEmail.value = null, signUpPassword.value = null, conPassword.value = null
         let passCheck = document.querySelector("#passCheck")
         passCheck.classList.replace("d-block", "d-none")
-        signUp.classList.add("moveIn")
+        signUp.classList.replace("moveIn", "moveOut")
         setTimeout(() => {
-            signIn.classList.replace("d-none", "d-flex")
-            signUp.classList.replace("d-flex", "d-none")
-            setTimeout(() => {
-                signIn.classList.remove("moveOut")
-            }, 50);
-        }, 1310);
+            signIn.classList.replace("moveOut", "moveIn")
+        }, 1000);
     }
 }

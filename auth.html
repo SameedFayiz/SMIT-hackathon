@@ -11,13 +11,16 @@
     </head>
 
     <body class="overflow-hidden position-relative bodyBack">
-        <img id="loading" src="./static/loading.gif" alt="" class="position-absolute top-50 start-50 translate-middle z-3 d-none">
-        <div id="signContainer" class="d-flex m-auto">
-            <div id="signIn" class="w-100 d-flex ">
-                <div class="w-50 h-100 bg-black p-4 d-flex align-items-center signPageBack">
-                    <div>
-                        <p>p</p>
-                        <p>p</p>
+        <img id="loading" src="./static/loading.gif" alt=""
+            class="position-absolute top-50 start-50 translate-middle z-3 d-none">
+        <div id="signContainer" class="d-flex m-auto position-relative">
+            <div id="signIn" class="w-100 d-flex position-absolute moveIn z-3">
+                <div class="w-50 h-100 p-4 d-flex align-items-center signPageBack">
+                    <div class="bg-opacity-50 bg-black rounded p-3 ">
+                        <p class="fs-1 text-white fw-bolder fst-italic text-center">BRAND</p>
+                        <p class="fs-6 text-white fw-medium">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                            Atque ducimus earum pariatur facere vitae fugit, reprehenderit, molestias aperiam maxime sit
+                            exercitationem non. Vel fugit magni exercitationem sapiente aut optio corrupti.</p>
                     </div>
                 </div>
                 <div class="w-50 h-100 bg-body-tertiary p-4 d-flex align-items-center">
@@ -67,11 +70,13 @@
                     </form>
                 </div>
             </div>
-            <div id="signUp" class="w-100 d-none  ">
-                <div class="w-50 h-100 bg-black p-4 d-flex align-items-center signPageBack">
-                    <div>
-                        <p>p</p>
-                        <p>p</p>
+            <div id="signUp" class="w-100 d-flex position-absolute moveOut">
+                <div class="w-50 h-100 p-4 d-flex align-items-center signPageBack">
+                    <div class="bg-opacity-50 bg-black rounded p-3 ">
+                        <p class="fs-1 text-white fw-bolder fst-italic text-center">BRAND</p>
+                        <p class="fs-6 text-white fw-medium">Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                            Atque ducimus earum pariatur facere vitae fugit, reprehenderit, molestias aperiam maxime sit
+                            exercitationem non. Vel fugit magni exercitationem sapiente aut optio corrupti.</p>
                     </div>
                 </div>
                 <div class="w-50 h-100 bg-body-tertiary p-4 d-flex align-items-center">
