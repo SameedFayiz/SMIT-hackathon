@@ -62,6 +62,7 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is signed in, see docs for a list of available properties
         const uid = user.uid;
+        loader.classList.replace("d-none", "d-block")
         setTimeout(() => {
             loader.classList.replace("d-block", "d-none")
             window.location.href = "./index.html"
@@ -112,14 +113,20 @@ function signUp() {
                 const user = userCredential.user;
                 let uid = user.uid;
 
-                // set(ref(database, 'appData/userInfo/' + uid), {
-                //     address: `not set`,
-                //     email,
-                //     fName,
-                //     lName,
-                //     password,
-                //     phone: `not set`
-                // });
+                (async function () {
+                    try {
+                        const docRef = await addDoc(collection(db, "users"), {
+                            user_id: uid,
+                            email,
+                            password,
+                            first_name: fName,
+                            last_name: lName,
+                        });
+                        console.log("Document written with ID: ", docRef.id);
+                    } catch (e) {
+                        console.error("Error adding document: ", e);
+                    }
+                })()
             })
             .catch((error) => {
                 passCheck.classList.replace("d-none", "d-block")
