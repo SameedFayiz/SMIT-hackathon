@@ -98,7 +98,7 @@ async function showAllBlogs() {
     querySnapshot.forEach((doc) => {
         let data = doc.data()
         let blog = `<div class="bg-body-tertiary border border-white rounded shadow-lg p-3 my-3">
-							<div class="d-flex mb-3">
+							<div class="d-flex flex-column flex-lg-row  mb-3">
 								<div
 									class="mx-2 profImg rounded overflow-hidden border border-4 border-light-subtle shadow">
 									<img class="img-fluid" src="${''}./static/prof.jpg" alt="">
