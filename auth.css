@@ -1,6 +1,6 @@
 /* Auth Page */
 .bodyBack {
-  background-image: url("https://img.freepik.com/free-vector/purple-3d-modern-background-design_53876-87399.jpg?size=626&ext=jpg&ga=GA1.2.400972649.1671267927&semt=ais") !important;
+  background-image: url("https://img.freepik.com/free-vector/gradient-abstract-technology-background_23-2149213766.jpg?size=626&ext=jpg&ga=GA1.2.1033835131.1692470633&semt=ais") !important;
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
@@ -8,7 +8,7 @@
 
 .signPageBack {
   justify-content: flex-start;
-  background-image: url("https://img.freepik.com/free-vector/gradient-wavy-purple-background_23-2149117433.jpg") !important;
+  background-image: url("https://img.freepik.com/free-vector/dark-blue-waves-dots-abstract-background_79603-879.jpg?size=626&ext=jpg") !important;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -39,7 +39,7 @@
 }
 
 .colourThemeText {
-  background: -webkit-linear-gradient(#3a089d, #df06eb);
+  background: -webkit-linear-gradient(#4860e8, #1c0762);
   background-clip: initial;
   -webkit-background-clip: text !important;
   -webkit-text-fill-color: transparent;
@@ -53,8 +53,8 @@ a.colourThemeText:hover,
 }
 
 .colourThemeBtn {
-  background: rgb(58, 8, 157);
-  background: linear-gradient(90deg, rgba(58, 8, 157, 1) 0%, rgba(223, 6, 235, 1) 100%);
+  background: rgb(#4860e8);
+  background: linear-gradient(90deg, #4860e8 0%, #1c0762 100%);
 }
 
 .moveIn {
