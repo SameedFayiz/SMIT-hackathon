@@ -31,13 +31,14 @@ var userBlogs = document.getElementById("userBlogs")
 var userBlogBtn = document.getElementById("userBtn")
 var myBlogs = document.getElementById("myBlogs")
 var myBlogBtn = document.getElementById("myBtn")
+var myblogContainer = document.getElementById("myblogContainer")
 var publish = document.getElementById("publish")
 var signNav = document.getElementById("goToAuth")
 var signOutBtn = document.getElementById("signOut")
 
 allBlogBtn.addEventListener("click", showAllBlogs)
 // userBlogBtn.addEventListener("click", showUserBlogs)
-// myBlogBtn.addEventListener("click", showMyBlogs)
+myBlogBtn.addEventListener("click", showMyBlogs)
 publish.addEventListener("click", writeBlog)
 signNav.addEventListener("click", userSignPage)
 signOutBtn.addEventListener("click", userSignOut)
@@ -68,11 +69,33 @@ function showUserBlogs() {
     myBlogs.classList.add("d-none")
 }
 
-function showMyBlogs() {
-    if (uid) {
+async function showMyBlogs() {
+    let userId = localStorage.getItem("uid")
+    if (userId) {
         myBlogs.classList.remove("d-none")
         allBlogs.classList.add("d-none")
         userBlogs.classList.add("d-none")
+        myblogContainer.innerHTML = null
+        const q = query(collection(db, "blogs"), where("user_id", "==", userId));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            let data = doc.data()
+            let blog = `<div class="bg-body-tertiary border border-white rounded shadow-lg p-3 my-3">
+							<div class="d-flex mb-3">
+								<div
+									class="mx-2 profImg rounded overflow-hidden border border-4 border-light-subtle shadow">
+									<img class="img-fluid" src="${''}./static/prof.jpg" alt="">
+								</div>
+								<div class="d-flex flex-column align-self-end ms-3">
+									<div class="fs-3 fw-semibold ">${data.blogTitle}</div>
+									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleDateString()}</div>
+								</div>
+							</div>
+							<div class=" my-2">${data.blogContent}</div>
+						</div>`
+            myblogContainer.innerHTML += blog
+        });
+
     } else {
         window.location.href = "./auth.html"
     }
@@ -116,8 +139,9 @@ function writeBlog() {
                 })()
             });
         })()
+        blogTitle.value = null
+        blogContent.value = null
     }
-
 }
 
 function userSignPage() {
