@@ -1,5 +1,9 @@
-#allBlogsContainer{
-    padding: 20px;
+.blogPadd{
+    padding: 20px 100px !important;
+}
+
+.headPadd{
+    padding-inline-start: 100px;
 }
 
 .profImg{
