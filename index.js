@@ -27,18 +27,28 @@ const db = getFirestore(app);
 
 var allBlogs = document.getElementById("allBlogs")
 var allBlogBtn = document.getElementById("allBtn")
+var allBlogContainer = document.getElementById("allBlogContainer")
 var userBlogs = document.getElementById("userBlogs")
-var userBlogBtn = document.getElementById("userBtn")
+// var userBlogBtn = document.getElementById("userBtn")
+var userBlogContainer = document.getElementById("userBlogContainer")
+var backToAll = document.getElementById("backToAll")
 var myBlogs = document.getElementById("myBlogs")
 var myBlogBtn = document.getElementById("myBtn")
-var myblogContainer = document.getElementById("myblogContainer")
+var myBlogContainer = document.getElementById("myBlogContainer")
+var blogTitle = document.getElementById("blogTitle")
+var TitleCount = document.getElementById("titleChCount")
+var blogContent = document.getElementById("blogContent")
+var ContentCount = document.getElementById("ContentChCount")
 var publish = document.getElementById("publish")
 var signNav = document.getElementById("goToAuth")
 var signOutBtn = document.getElementById("signOut")
 
 allBlogBtn.addEventListener("click", showAllBlogs)
+backToAll.addEventListener("click", showAllBlogs)
 // userBlogBtn.addEventListener("click", showUserBlogs)
 myBlogBtn.addEventListener("click", showMyBlogs)
+blogTitle.addEventListener("input", () => { TitleCount.innerText = `${blogTitle.value.length}/50` })
+blogContent.addEventListener("input", () => { ContentCount.innerText = `${blogContent.value.length}/3000` })
 publish.addEventListener("click", writeBlog)
 signNav.addEventListener("click", userSignPage)
 signOutBtn.addEventListener("click", userSignOut)
@@ -57,30 +67,16 @@ onAuthStateChanged(auth, (user) => {
 });
 
 
-function showAllBlogs() {
+async function showAllBlogs() {
     allBlogs.classList.remove("d-none")
     userBlogs.classList.add("d-none")
     myBlogs.classList.add("d-none")
-}
-
-function showUserBlogs() {
-    userBlogs.classList.remove("d-none")
-    allBlogs.classList.add("d-none")
-    myBlogs.classList.add("d-none")
-}
-
-async function showMyBlogs() {
-    let userId = localStorage.getItem("uid")
-    if (userId) {
-        myBlogs.classList.remove("d-none")
-        allBlogs.classList.add("d-none")
-        userBlogs.classList.add("d-none")
-        myblogContainer.innerHTML = null
-        const q = query(collection(db, "blogs"), where("user_id", "==", userId), orderBy("time", "desc"));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            let data = doc.data()
-            let blog = `<div class="bg-body-tertiary border border-white rounded shadow-lg p-3 my-3">
+    allBlogContainer.innerHTML = null
+    const q = query(collection(db, "blogs"), orderBy("time", "desc"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        let data = doc.data()
+        let blog = `<div class="bg-body-tertiary border border-white rounded shadow-lg p-3 my-3">
 							<div class="d-flex mb-3">
 								<div
 									class="mx-2 profImg rounded overflow-hidden border border-4 border-light-subtle shadow">
@@ -92,17 +88,91 @@ async function showMyBlogs() {
 								</div>
 							</div>
 							<div class=" my-2">${data.blogContent}</div>
+                            <a name="${data.user_id}" class="link-primary text-decoration-none seeMore">See more from this user</a>
 						</div>`
-            myblogContainer.innerHTML += blog
+        allBlogContainer.innerHTML += blog
+    });
+    setTimeout(() => {
+        let seeMore = document.getElementsByClassName("seeMore")
+        Array.from(seeMore).forEach(element => {
+            element.addEventListener("click", () => { showUserBlogs(element.name) })
         });
+    }, 2000);
+}
+showAllBlogs()
+
+
+async function showUserBlogs(id) {
+    userBlogs.classList.remove("d-none")
+    allBlogs.classList.add("d-none")
+    myBlogs.classList.add("d-none")
+    userBlogContainer.innerHTML = null
+    const q = query(collection(db, "blogs"), where("user_id", "==", id), orderBy("time", "desc"));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+        let data = doc.data()
+        let blog = `<div id=${doc.id} class="bg-body-tertiary border border-white rounded shadow-lg p-3 my-3">
+							<div class="d-flex mb-3">
+								<div
+									class="mx-2 profImg rounded overflow-hidden border border-4 border-light-subtle shadow">
+									<img class="img-fluid" src="${''}./static/prof.jpg" alt="">
+								</div>
+								<div class="d-flex flex-column align-self-end ms-3">
+									<div class="fs-3 fw-semibold ">${data.blogTitle}</div>
+									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleString()}</div>
+								</div>
+							</div>
+							<div class=" my-2">${data.blogContent}</div>
+
+						</div>`
+        userBlogContainer.innerHTML += blog
+    });
+}
+
+async function showMyBlogs() {
+    let userId = localStorage.getItem("uid")
+    if (userId) {
+        myBlogs.classList.remove("d-none")
+        allBlogs.classList.add("d-none")
+        userBlogs.classList.add("d-none")
+        myBlogContainer.innerHTML = null
+        const q = query(collection(db, "blogs"), where("user_id", "==", userId), orderBy("time", "desc"));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+            let data = doc.data()
+            let blog = `<div id=${doc.id} class="bg-body-tertiary border border-white rounded shadow-lg p-3 my-3">
+							<div class="d-flex mb-3">
+								<div
+									class="mx-2 profImg rounded overflow-hidden border border-4 border-light-subtle shadow">
+									<img class="img-fluid" src="${''}./static/prof.jpg" alt="">
+								</div>
+								<div class="d-flex flex-column align-self-end ms-3">
+									<div class="fs-3 fw-semibold ">${data.blogTitle}</div>
+									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleString()}</div>
+								</div>
+							</div>
+							<div class=" my-2">${data.blogContent}</div>
+                            <button id="${data.blogTitle}" class="btn btn-success editBlog">Edit</button>
+						<button id="${data.blogTitle}" class="btn btn-danger deleteBlog">Delete</button>
+						</div>`
+            myBlogContainer.innerHTML += blog
+        });
+        setTimeout(() => {
+            let edit = document.getElementsByClassName("editBlog")
+            let deleteBlog = document.getElementsByClassName("deleteBlog")
+            Array.from(deleteBlog).forEach(element => {
+                element.addEventListener("click", () => { deleteBlogFunc(element) })
+            });
+            Array.from(edit).forEach(element => {
+                element.addEventListener("click", () => { editBlog(element) })
+            });
+        }, 1000);
     } else {
         window.location.href = "./auth.html"
     }
 }
 
 function writeBlog() {
-    let blogTitle = document.getElementById("blogTitle")
-    let blogContent = document.getElementById("blogContent")
     let [title, content] = [blogTitle.value, blogContent.value]
     let valid = false
     switch (valid) {
@@ -145,6 +215,30 @@ function writeBlog() {
             showMyBlogs()
         }, 1000);
     }
+}
+
+async function editBlog(element) {
+    let docId = element.parentNode.id;
+    const docRefBlog = doc(db, "cities", docId);
+    const docSnap = await getDoc(docRefBlog);
+    if (docSnap.exists()) {
+        blogTitle.value =  docSnap.data().blogTitle
+        blogContent.value =  docSnap.data().blogContent
+    } else {
+        console.log("No such document!");
+    }
+
+}
+
+async function deleteBlogFunc(element) {
+    let docId = element.parentNode.id;
+    let confm = confirm("Do you want to delete this Blog?")
+    if (confm) {
+        await deleteDoc(doc(db, "blogs", docId));
+    }
+    setTimeout(() => {
+        showMyBlogs()
+    }, 1000);
 }
 
 function userSignPage() {
