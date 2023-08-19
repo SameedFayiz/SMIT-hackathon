@@ -1,7 +1,11 @@
-#allBlogs{
+#allBlogsContainer{
     padding: 20px;
 }
 
+.profImg{
+    max-width: 150px !important;
+    max-height: 150px !important;
+}
 
 
 
