@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -29,8 +29,8 @@ var allBlogs = document.getElementById("allBlogs")
 var allBlogBtn = document.getElementById("allBtn")
 var allBlogContainer = document.getElementById("allBlogContainer")
 var userBlogs = document.getElementById("userBlogs")
-// var userBlogBtn = document.getElementById("userBtn")
 var userBlogContainer = document.getElementById("userBlogContainer")
+var user = document.getElementById("user")
 var backToAll = document.getElementById("backToAll")
 var myBlogs = document.getElementById("myBlogs")
 var myBlogBtn = document.getElementById("myBtn")
@@ -40,6 +40,8 @@ var TitleCount = document.getElementById("titleChCount")
 var blogContent = document.getElementById("blogContent")
 var ContentCount = document.getElementById("ContentChCount")
 var publish = document.getElementById("publish")
+var cancelBlog = document.getElementById("cancel")
+var updateflag = [false, null]
 var signNav = document.getElementById("goToAuth")
 var signOutBtn = document.getElementById("signOut")
 
@@ -50,6 +52,11 @@ myBlogBtn.addEventListener("click", showMyBlogs)
 blogTitle.addEventListener("input", () => { TitleCount.innerText = `${blogTitle.value.length}/50` })
 blogContent.addEventListener("input", () => { ContentCount.innerText = `${blogContent.value.length}/3000` })
 publish.addEventListener("click", writeBlog)
+cancelBlog.addEventListener("click", () => {
+    blogContent.value = null
+    blogTitle.value = null
+    showMyBlogs()
+})
 signNav.addEventListener("click", userSignPage)
 signOutBtn.addEventListener("click", userSignOut)
 
@@ -83,11 +90,11 @@ async function showAllBlogs() {
 									<img class="img-fluid" src="${''}./static/prof.jpg" alt="">
 								</div>
 								<div class="d-flex flex-column align-self-end ms-3">
-									<div class="fs-3 fw-semibold ">${data.blogTitle}</div>
+									<div class="text-wrap text-break fs-3 fw-semibold ">${data.blogTitle}</div>
 									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleString()}</div>
 								</div>
 							</div>
-							<div class=" my-2">${data.blogContent}</div>
+							<div class="text-wrap text-break my-2">${data.blogContent}</div>
                             <a name="${data.user_id}" class="link-primary text-decoration-none seeMore">See more from this user</a>
 						</div>`
         allBlogContainer.innerHTML += blog
@@ -111,6 +118,7 @@ async function showUserBlogs(id) {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
         let data = doc.data()
+        user.innerText = data.user_name
         let blog = `<div id=${doc.id} class="bg-body-tertiary border border-white rounded shadow-lg p-3 my-3">
 							<div class="d-flex mb-3">
 								<div
@@ -118,11 +126,11 @@ async function showUserBlogs(id) {
 									<img class="img-fluid" src="${''}./static/prof.jpg" alt="">
 								</div>
 								<div class="d-flex flex-column align-self-end ms-3">
-									<div class="fs-3 fw-semibold ">${data.blogTitle}</div>
+									<div class="text-wrap text-break fs-3 fw-semibold ">${data.blogTitle}</div>
 									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleString()}</div>
 								</div>
 							</div>
-							<div class=" my-2">${data.blogContent}</div>
+							<div class="text-wrap text-break my-2">${data.blogContent}</div>
 
 						</div>`
         userBlogContainer.innerHTML += blog
@@ -147,11 +155,11 @@ async function showMyBlogs() {
 									<img class="img-fluid" src="${''}./static/prof.jpg" alt="">
 								</div>
 								<div class="d-flex flex-column align-self-end ms-3">
-									<div class="fs-3 fw-semibold ">${data.blogTitle}</div>
+									<div class="text-wrap text-break fs-3 fw-semibold ">${data.blogTitle}</div>
 									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleString()}</div>
 								</div>
 							</div>
-							<div class=" my-2">${data.blogContent}</div>
+							<div class="text-wrap text-break my-2">${data.blogContent}</div>
                             <button id="${data.blogTitle}" class="btn btn-success editBlog">Edit</button>
 						<button id="${data.blogTitle}" class="btn btn-danger deleteBlog">Delete</button>
 						</div>`
@@ -172,7 +180,7 @@ async function showMyBlogs() {
     }
 }
 
-function writeBlog() {
+async function writeBlog() {
     let [title, content] = [blogTitle.value, blogContent.value]
     let valid = false
     switch (valid) {
@@ -187,9 +195,15 @@ function writeBlog() {
     }
     if (!valid) {
         return null
-    } else {
+    } else if (updateflag[0] == true && updateflag[1]) {
+        await updateDoc(doc(db, "blogs", updateflag[1]), {
+            blogTitle: title,
+            blogContent: content
+        });
         blogTitle.value = null;
         blogContent.value = null;
+        updateflag = [false, null]
+    } else {
         (async function () {
             let userId = localStorage.getItem("uid");
             const q = query(collection(db, "users"), where("user_id", "==", userId));
@@ -211,19 +225,25 @@ function writeBlog() {
                 })()
             });
         })()
-        setTimeout(() => {
-            showMyBlogs()
-        }, 1000);
+        blogTitle.value = null;
+        blogContent.value = null;
+        TitleCount.innerText = `0/50`
+        ContentCount.innerText = `0/3000`
     }
+    setTimeout(() => {
+        showMyBlogs()
+    }, 1000);
 }
 
 async function editBlog(element) {
     let docId = element.parentNode.id;
-    const docRefBlog = doc(db, "cities", docId);
+    const docRefBlog = doc(db, "blogs", docId);
     const docSnap = await getDoc(docRefBlog);
     if (docSnap.exists()) {
-        blogTitle.value =  docSnap.data().blogTitle
-        blogContent.value =  docSnap.data().blogContent
+        blogTitle.value = docSnap.data().blogTitle
+        blogContent.value = docSnap.data().blogContent
+        window.scrollTo(0, 0);
+        updateflag = [true, docId]
     } else {
         console.log("No such document!");
     }
