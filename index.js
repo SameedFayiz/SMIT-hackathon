@@ -43,11 +43,11 @@ signNav.addEventListener("click", userSignPage)
 signOutBtn.addEventListener("click", userSignOut)
 
 // User state change 
-var uid = onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is signed in, see docs for a list of available properties
-        const uid = user.uid;
-        return uid
+        var uid = user.uid;
+        localStorage.setItem("uid", uid)
         // let goTo = window.location.href
 
     } else {
@@ -96,24 +96,24 @@ function writeBlog() {
         return null
     } else {
         (async function () {
-            const q = query(collection(db, "users"), where("user_id", "==", uid));
+            let userId = localStorage.getItem("uid");
+            const q = query(collection(db, "users"), where("user_id", "==", userId));
+            const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
                 (async function () {
                     let [fname, lname] = [doc.data().first_name, doc.data().last_name]
                     try {
                         const docRefBlog = await addDoc(collection(db, "blogs"), {
-                            user_id: uid,
+                            user_id: userId,
                             user_name: `${fname} ${lname}`,
                             time: new Date().getTime(),
-                            blogTitle,
-                            blogContent
+                            blogTitle: blogTitle.value,
+                            blogContent: blogContent.value
                         });
-                        console.log("Document written with ID: ", docRefBlog.id);
                     } catch (e) {
                         console.error("Error adding document: ", e);
                     }
                 })()
-                console.log(doc.id, " => ", doc.data());
             });
         })()
     }
@@ -127,6 +127,7 @@ function userSignPage() {
 // User sign out func
 function userSignOut() {
     signOut(auth).then(() => {
+        localStorage.removeItem("uid")
         window.location.reload()
         // Sign-out successful.
     }).catch((error) => {
