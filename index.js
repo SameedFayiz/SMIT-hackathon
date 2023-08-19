@@ -20,11 +20,34 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-
 // Initialize FireStore Database and get a reference to the service
 const db = getFirestore(app);
 
+// User state change 
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        currUser.classList.remove("d-none")
+        signNav.classList.add("d-none")
+        // User is signed in, see docs for a list of available properties
+        var uid = user.uid;
+        localStorage.setItem("uid", uid);
+        console.log(uid);
+        (async () => {
+            const q = query(collection(db, "users"), where("user_id", "==", uid));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                currUser.textContent = `${doc.data().first_name} ${doc.data().last_name}`
+            });
+        })()
+    } else {
+        signNav.classList.remove("d-none")
+        currUser.classList.add("d-none")
+        // User is signed out
+    }
+});
 
+
+var currUser = document.getElementById("currUser")
 var allBlogs = document.getElementById("allBlogs")
 var allBlogBtn = document.getElementById("allBtn")
 var allBlogContainer = document.getElementById("allBlogContainer")
@@ -59,19 +82,6 @@ cancelBlog.addEventListener("click", () => {
 })
 signNav.addEventListener("click", userSignPage)
 signOutBtn.addEventListener("click", userSignOut)
-
-// User state change 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // User is signed in, see docs for a list of available properties
-        var uid = user.uid;
-        localStorage.setItem("uid", uid)
-        // let goTo = window.location.href
-
-    } else {
-        // User is signed out
-    }
-});
 
 
 async function showAllBlogs() {
