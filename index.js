@@ -95,6 +95,9 @@ async function showMyBlogs() {
 						</div>`
             myblogContainer.innerHTML += blog
         });
+        setTimeout(() => {
+            showMyBlogs()
+        }, 1000);
 
     } else {
         window.location.href = "./auth.html"
