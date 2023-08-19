@@ -29,6 +29,7 @@ const db = getFirestore(app);
 onAuthStateChanged(auth, (user) => {
     if (user) {
         currUser.classList.remove("d-none")
+        prof.classList.remove("d-none")
         signNav.classList.add("d-none")
         // User is signed in, see docs for a list of available properties
         var uid = user.uid;
@@ -43,11 +44,12 @@ onAuthStateChanged(auth, (user) => {
     } else {
         signNav.classList.remove("d-none")
         currUser.classList.add("d-none")
+        prof.classList.add("d-none")
         // User is signed out
     }
 });
 
-
+var prof = document.getElementById("prof")
 var currUser = document.getElementById("currUser")
 var allBlogs = document.getElementById("allBlogs")
 var allBlogBtn = document.getElementById("allBtn")
