@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, getDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -76,7 +76,7 @@ async function showMyBlogs() {
         allBlogs.classList.add("d-none")
         userBlogs.classList.add("d-none")
         myblogContainer.innerHTML = null
-        const q = query(collection(db, "blogs"), where("user_id", "==", userId));
+        const q = query(collection(db, "blogs"), where("user_id", "==", userId), orderBy("time", "desc"));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             let data = doc.data()
@@ -88,17 +88,13 @@ async function showMyBlogs() {
 								</div>
 								<div class="d-flex flex-column align-self-end ms-3">
 									<div class="fs-3 fw-semibold ">${data.blogTitle}</div>
-									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleDateString()}</div>
+									<div class="text-body-secondary">${data.user_name}-${new Date(data.time).toLocaleString()}</div>
 								</div>
 							</div>
 							<div class=" my-2">${data.blogContent}</div>
 						</div>`
             myblogContainer.innerHTML += blog
         });
-        setTimeout(() => {
-            showMyBlogs()
-        }, 1000);
-
     } else {
         window.location.href = "./auth.html"
     }
@@ -107,6 +103,7 @@ async function showMyBlogs() {
 function writeBlog() {
     let blogTitle = document.getElementById("blogTitle")
     let blogContent = document.getElementById("blogContent")
+    let [title, content] = [blogTitle.value, blogContent.value]
     let valid = false
     switch (valid) {
         case blogTitle.checkValidity():
@@ -121,6 +118,8 @@ function writeBlog() {
     if (!valid) {
         return null
     } else {
+        blogTitle.value = null;
+        blogContent.value = null;
         (async function () {
             let userId = localStorage.getItem("uid");
             const q = query(collection(db, "users"), where("user_id", "==", userId));
@@ -133,8 +132,8 @@ function writeBlog() {
                             user_id: userId,
                             user_name: `${fname} ${lname}`,
                             time: new Date().getTime(),
-                            blogTitle: blogTitle.value,
-                            blogContent: blogContent.value
+                            blogTitle: title,
+                            blogContent: content
                         });
                     } catch (e) {
                         console.error("Error adding document: ", e);
@@ -142,8 +141,9 @@ function writeBlog() {
                 })()
             });
         })()
-        blogTitle.value = null
-        blogContent.value = null
+        setTimeout(() => {
+            showMyBlogs()
+        }, 1000);
     }
 }
 
