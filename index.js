@@ -23,6 +23,8 @@ const auth = getAuth();
 // Initialize FireStore Database and get a reference to the service
 const db = getFirestore(app);
 
+
+
 // User state change 
 onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -31,7 +33,6 @@ onAuthStateChanged(auth, (user) => {
         // User is signed in, see docs for a list of available properties
         var uid = user.uid;
         localStorage.setItem("uid", uid);
-        console.log(uid);
         (async () => {
             const q = query(collection(db, "users"), where("user_id", "==", uid));
             const querySnapshot = await getDocs(q);
@@ -67,6 +68,7 @@ var cancelBlog = document.getElementById("cancel")
 var updateflag = [false, null]
 var signNav = document.getElementById("goToAuth")
 var signOutBtn = document.getElementById("signOut")
+
 
 allBlogBtn.addEventListener("click", showAllBlogs)
 backToAll.addEventListener("click", showAllBlogs)
