@@ -125,6 +125,7 @@ function signUp() {
                             password,
                             first_name: fName,
                             last_name: lName,
+                            profile_img:"https://firebasestorage.googleapis.com/v0/b/first-project-59564.appspot.com/o/images%2Fprofile?alt=media&token=751048cd-0dcf-42d8-8c3d-be00626e26e3"
                         });
                         console.log("Document written with ID: ", docRef.id);
                     } catch (e) {
