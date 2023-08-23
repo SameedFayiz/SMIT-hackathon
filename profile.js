@@ -102,6 +102,9 @@ imgIn.addEventListener("input", () => {
                     })();
                 });
             })();
+            setTimeout(() => {
+                window.location.reload()
+            }, 5000);
         });
     });
 });

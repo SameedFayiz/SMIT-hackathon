@@ -242,20 +242,26 @@ async function writeBlog() {
             const q = query(collection(db, "users"), where("user_id", "==", userId));
             const querySnapshot = await getDocs(q);
             querySnapshot.forEach((doc) => {
-                (async function () {
-                    let [fname, lname] = [doc.data().first_name, doc.data().last_name]
-                    try {
-                        const docRefBlog = await addDoc(collection(db, "blogs"), {
-                            user_id: userId,
-                            user_name: `${fname} ${lname}`,
-                            time: new Date().getTime(),
-                            blogTitle: title,
-                            blogContent: content
-                        });
-                    } catch (e) {
-                        console.error("Error adding document: ", e);
-                    }
-                })()
+                getDownloadURL(storageRef)
+                    .then((url) => {
+                        (async function () {
+                            let [fname, lname] = [doc.data().first_name, doc.data().last_name]
+                            try {
+                                const docRefBlog = await addDoc(collection(db, "blogs"), {
+                                    user_id: userId,
+                                    user_name: `${fname} ${lname}`,
+                                    time: new Date().getTime(),
+                                    blogTitle: title,
+                                    blogContent: content,
+                                    profile_img: url
+                                });
+                            } catch (e) {
+                                console.error("Error adding document: ", e);
+                            }
+                        })()
+                    })
+                    .catch((error) => {
+                    });
             });
         })()
     }
